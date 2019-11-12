@@ -162,16 +162,65 @@ router.get('koala', '/api/deezer/get/:object/:id', async (ctx) => {
     ctx.body = res
 })
 
-router.get('koala', '/api/deezer/search/:object', async (ctx) => {
+router.get('koala', '/api/deezer/search/', async (ctx) => {
     let search = ctx.request.query['q']
-    let object = ctx.params.object
-
     let limit = 20 //TODO : See how to manage it
 
-    const url = `https://api.deezer.com/search/${object}?q=${search}&limit=${limit}`;
+    const url = `https://api.deezer.com/search/track?q=${search}&limit=${limit}`;
 
     const options = {
         url: url
+    }
+
+    let res = await request(options, function (error, response, body) {
+        console.error('error : ', error)
+        console.log('statusCode : ', response && response.statusCode)
+        return body
+    })
+
+    ctx.body = res
+})
+
+router.get('advanced_search_deezer', '/api/deezer/search/advanced', async (ctx) => {
+    const {query} = ctx.request
+    console.log(query)
+    const {title, artist, album} = query
+
+    const url = `https://api.deezer.com/search?q=artist:"${artist}"track:"${title}"`
+
+    const options = {
+        url: url
+    }
+    console.log('url' + url)
+
+    let res = await request(options, function (error, response, body) {
+        console.error('error : ', error)
+        console.log('statusCode : ', response && response.statusCode)
+        return body
+    })
+
+    ctx.body = res
+})
+
+router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx) => {
+    console.log('/api/spotify/search/advanced')
+    const {query} = ctx.request
+    const {type, title, artist, album} = query.q
+
+    const url = `https://api.spotify.com/v1/search?q=artist:${artist}track:${title}&type=${type}`
+
+    let accessToken
+    if (await isAccessTokenValid()) {
+        //console.log('valid')
+        accessToken = (await readAccessToken())['access_token']
+    } else {
+        //console.log('expired')
+        accessToken = await getNewAccessToken()
+    }
+
+    const options = {
+        url: url,
+        headers: { 'Authorization': 'Bearer ' + accessToken }
     }
 
     let res = await request(options, function (error, response, body) {

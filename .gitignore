@@ -10,10 +10,9 @@
 /frontend/coverage
 
 # production
-/frontend/build
+frontend/build
 
 /frontend/public/dist
-
 # misc
 .DS_Store
 .env.local

@@ -4,7 +4,7 @@ class Track{
     constructor(track) {
         this.id = track.id
         this.album = new Album(track.album)
-        this.artists = track.artists.map(artist => new Artist(artist))
+        this.artists = (track.artists != null) ? track.artists.map(artist => new Artist(artist)) : {}
         this.name = track.name
     }
 }
