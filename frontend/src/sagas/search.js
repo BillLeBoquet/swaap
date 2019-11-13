@@ -12,9 +12,12 @@ function* requestSearchTrack(search) {
         const dataSpotifyToFormat = yield axios.get(`/api/spotify/search?q=${searchValue}&type=track`, {}).catch(function (error) {
             console.error(error);
         });
+        const dataSpotify = (dataSpotifyToFormat.data != null)
+            ? dataSpotifyToFormat.data.tracks.items.map((item) => formatSpotifyTrack(item))
+            : null
 
-        const dataSpotify = dataSpotifyToFormat.data.tracks.items.map((item) => formatSpotifyTrack(item))
-        const dataDeezer = dataDeezerToFormat.data.data.map((item) => formatDeezerTrack(item))
+        const dataDeezer = (dataDeezerToFormat.data != null) ? dataDeezerToFormat.data.data.map((item) => formatDeezerTrack(item))
+            : null
 
         if(dataSpotify !== null){
             const tracks = {

@@ -6,8 +6,9 @@ import Footer from "./Footer";
 
 const Body = () => {
     const {tracks, isDataAvailable, searchBar, searchValue, api} = useSelector(state => state.search);
-    const {playlists, isPlaylistEmpty} = useSelector(state => state.playlists);
+    const {playlists, isPlaylistEmpty, loadingAddTrack} = useSelector(state => state.playlists);
     const dispatch = useDispatch()
+
     function getTrack(tracks){
         switch (api) {
             case 1:
@@ -15,6 +16,19 @@ const Body = () => {
             case 2:
                 return tracks.dataDeezer
             default:
+                return null
+        }
+    }
+
+    function getPlaylist(playlist){
+        console.log('playlist')
+        console.log(playlist)
+        switch (api) {
+            case 1:
+                return playlist.map((item) => item.dataSpotify)
+            case 2 :
+                return playlist.map((item) => item.dataDeezer)
+            default :
                 return null
         }
     }
@@ -74,23 +88,30 @@ const Body = () => {
                                                     </div>
                                                 </div>
                                                 <div className="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
-                                                    <div className="kt-container  kt-grid__item kt-grid__item--fluid" >
-                                                        <div className="row">
-                                                        {
-                                                            isDataAvailable ? (
-                                                                <Tracks items={getTrack(tracks)} api={api} isPlaylist={false}/>
-                                                            ) : (
-                                                                <div/>
-                                                            )
-                                                        } {
-                                                            !isPlaylistEmpty ? (
-                                                                <Tracks items={getTrack(playlists)} api={api} isPlaylist={true}/>
-                                                            ) : (
-                                                                <div/>
-                                                            )
-                                                        }
-                                                        </div>
-                                                    </div>
+
+                                                    {
+                                                        !loadingAddTrack ? (
+                                                            <div className="kt-container  kt-grid__item kt-grid__item--fluid" >
+                                                                <div className="row">
+                                                                    {
+                                                                        isDataAvailable ? (
+                                                                            <Tracks items={getTrack(tracks)} api={api} isPlaylist={false}/>
+                                                                        ) : (
+                                                                            <div/>
+                                                                        )
+                                                                    } {
+                                                                    !isPlaylistEmpty ? (
+                                                                        <Tracks items={getPlaylist(playlists)} api={api} isPlaylist={true}/>
+                                                                    ) : (
+                                                                        <div/>
+                                                                    )
+                                                                }
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div/>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

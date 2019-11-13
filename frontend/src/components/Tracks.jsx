@@ -1,11 +1,9 @@
 import React from 'react';
 import {useDispatch} from "react-redux";
-import {addTrackToPlaylist} from "../modules/playlistManager";
+import {addTrackToPlaylist, removeResultFromPlaylilst} from "../modules/playlistManager";
 
 const Tracks = (props) => {
     const tracks = props.items
-    console.log('tracks')
-    console.log(tracks)
     const {api, isPlaylist} = props
     const dispatch = useDispatch()
     return (
@@ -55,8 +53,8 @@ const Tracks = (props) => {
                                             </button>
                                         ) : (
                                             <button type="button" className="btn btn-outline-danger btn-icon btn-circle"
-                                                    onClick={() => dispatch(addTrackToPlaylist({
-                                                        track,
+                                                    onClick={() => dispatch(removeResultFromPlaylilst({
+                                                        id: track.id,
                                                         api
                                                     }))}>
                                                 <i className="fa fa-times"/>

@@ -166,7 +166,7 @@ router.get('koala', '/api/deezer/search/', async (ctx) => {
     let search = ctx.request.query['q']
     let limit = 20 //TODO : See how to manage it
 
-    const url = `https://api.deezer.com/search/track?q=${search}&limit=${limit}`;
+    const url = `https://api.deezer.com/search/track?q=${search}&limit=${limit}&type=track`;
 
     const options = {
         url: url
@@ -178,12 +178,13 @@ router.get('koala', '/api/deezer/search/', async (ctx) => {
         return body
     })
 
+    console.log(res)
+
     ctx.body = res
 })
 
 router.get('advanced_search_deezer', '/api/deezer/search/advanced', async (ctx) => {
     const {query} = ctx.request
-    console.log(query)
     const {title, artist, album} = query
 
     const url = `https://api.deezer.com/search?q=artist:"${artist}"track:"${title}"`
@@ -191,7 +192,6 @@ router.get('advanced_search_deezer', '/api/deezer/search/advanced', async (ctx) 
     const options = {
         url: url
     }
-    console.log('url' + url)
 
     let res = await request(options, function (error, response, body) {
         console.error('error : ', error)
@@ -203,7 +203,6 @@ router.get('advanced_search_deezer', '/api/deezer/search/advanced', async (ctx) 
 })
 
 router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx) => {
-    console.log('/api/spotify/search/advanced')
     const {query} = ctx.request
     const {type, title, artist, album} = query.q
 
