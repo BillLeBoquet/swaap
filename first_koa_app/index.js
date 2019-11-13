@@ -9,6 +9,12 @@ const fs = require('fs')
 const app = new koa()
 const router = new koaRouter()
 
+const db = require('./config/db.config.js');
+  
+db.sequelize.sync().then(() => {
+  console.log('DB has been synchronized { force: false }');
+});
+
 function writeAccessToken(entry) {
     fs.writeFile('./properties/access.json', entry, (err) => {
         if (err) throw err;
