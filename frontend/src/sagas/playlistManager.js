@@ -1,53 +1,41 @@
 import {put, takeEvery} from 'redux-saga/effects'
-import {ADD_TO_PLAYLIST, addResultToPlaylist,toggleAddTrack} from "../modules/playlistManager";
-import axios from 'axios';
-import {formatDeezerTrack, formatSpotifyTrack} from "../util/utils";
-
-async function manageAdvancedSearch(url, artist, title, album) {
-    let res = await axios.get(`${url}?artist=${artist}&title=${title}&album=${album}&type=track`, {})
-        .catch(function (error) {
-            console.error(error)
-        })
-    if(res === null){
-        res = await axios.get(`${url}?artist=${artist}&title=${title}&album=${album}&type=track`, {})
-            .catch(function (error) {
-                console.error(error)
-            })
-    }
-    if (res === null) {
-        return false
-    }
-    return res
-}
+import {ADD_TO_PLAYLIST, addResultToPlaylist} from "../modules/playlistManager";
+import RequestInBean from "../modeles/RequestInBean";
+import DeezerService from "../services/DeezerService";
+import SpotifyService from "../services/SpotifyService";
 
 function* addTrackToPlaylist(input) {
-    put(toggleAddTrack())
+    //yield put(toggleAddTrack())
     const {track, api} = input
     const artist = track.artists[0].name
     const title = track.name
     const album = track.album.name
-    let res, tracksFromApis
+
+    const requestInBean = new RequestInBean(title, album, artist)
+    let tracksFromApis
 
     switch(api) {
         case 1:
-            res = yield manageAdvancedSearch('/api/deezer/search/advanced', artist, title, album)
-            if(res === false) {
+            const deezer = yield new DeezerService().searchTrackFromCompleteRequestInBean(requestInBean)
+
+            if(deezer === false) {
                 tracksFromApis = {}
             } else{
                 tracksFromApis = {
                     spotify: track,
-                    deezer: formatDeezerTrack(res.data.data[0]),
+                    deezer,
                 }
             }
 
             break;
         case 2:
-            res = yield manageAdvancedSearch('/api/spotify/search/advanced', artist, title, album)
-            if(res === false) {
+            const spotify = yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
+
+            if(spotify === false) {
                 tracksFromApis = {}
             } else {
                 tracksFromApis = {
-                    spotify: formatSpotifyTrack(res.data[0]),
+                    spotify,
                     deezer: track,
                 }
             }
@@ -59,7 +47,7 @@ function* addTrackToPlaylist(input) {
             }
     }
     yield put(addResultToPlaylist(tracksFromApis))
-    put(toggleAddTrack())
+    //yield put(toggleAddTrack())
 }
 
 export default function* manageAddPlaylist() {

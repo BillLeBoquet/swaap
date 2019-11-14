@@ -21,8 +21,6 @@ const Body = () => {
     }
 
     function getPlaylist(playlist){
-        console.log('playlist')
-        console.log(playlist)
         switch (api) {
             case 1:
                 return playlist.map((item) => item.dataSpotify)
@@ -99,13 +97,14 @@ const Body = () => {
                                                                         ) : (
                                                                             <div/>
                                                                         )
-                                                                    } {
-                                                                    !isPlaylistEmpty ? (
-                                                                        <Tracks items={getPlaylist(playlists)} api={api} isPlaylist={true}/>
-                                                                    ) : (
-                                                                        <div/>
-                                                                    )
-                                                                }
+                                                                    }
+                                                                    {
+                                                                        !isPlaylistEmpty ? (
+                                                                            <Tracks items={getPlaylist(playlists)} api={api} isPlaylist={true}/>
+                                                                        ) : (
+                                                                            <div/>
+                                                                        )
+                                                                    }
                                                                 </div>
                                                             </div>
                                                         ) : (
