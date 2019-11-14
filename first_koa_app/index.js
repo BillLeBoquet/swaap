@@ -140,7 +140,7 @@ router.get('koala', '/api/spotify/search', async (ctx) => {
 
     let res = await request(options, function (error, response, body) {
         console.error('error : ', error)
-        console.log('statusCode : ', response && response.statusCode)
+        console.log('statusCode : ', response.statusCode)
         return body
     })
 
@@ -178,19 +178,21 @@ router.get('koala', '/api/deezer/search/', async (ctx) => {
         return body
     })
 
-    console.log(res)
-
     ctx.body = res
 })
 
 router.get('advanced_search_deezer', '/api/deezer/search/advanced', async (ctx) => {
     const {query} = ctx.request
-    const {title, artist, album} = query
-
-    const url = `https://api.deezer.com/search?q=artist:"${artist}"track:"${title}"`
+    const {title, artist, album, type} = query
+    let url
+    if(album !== null) {
+        url = `https://api.deezer.com/search?q=artist:"${artist}"track:"${title}""album:"${album}&type=${type}`
+    } else {
+        url = `https://api.deezer.com/search?q=artist:"${artist}"track:"${title}&type=track"`
+    }
 
     const options = {
-        url: url
+        url
     }
 
     let res = await request(options, function (error, response, body) {
@@ -204,9 +206,13 @@ router.get('advanced_search_deezer', '/api/deezer/search/advanced', async (ctx) 
 
 router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx) => {
     const {query} = ctx.request
-    const {type, title, artist, album} = query.q
-
-    const url = `https://api.spotify.com/v1/search?q=artist:${artist}track:${title}&type=${type}`
+    const {type, title, artist, album} = query
+    let url
+    if(album !== null) {
+        url = `https://api.spotify.com/v1/search?q=artist:${artist} track:${title} album:${album}&type=${type}`
+    } else {
+        url = `https://api.spotify.com/v1/search?q=artist:${artist} track:${title}&type=${type}"`
+    }
 
     let accessToken
     if (await isAccessTokenValid()) {
@@ -218,7 +224,7 @@ router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx
     }
 
     const options = {
-        url: url,
+        url,
         headers: { 'Authorization': 'Bearer ' + accessToken }
     }
 
