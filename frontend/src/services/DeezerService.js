@@ -1,4 +1,4 @@
-import {formatDeezerTrack} from "../util/utils";
+import {formatDeezerTrack, formatSpotifyTrack} from "../util/utils";
 import axios from "axios";
 
 function formatData(data) {
@@ -14,19 +14,19 @@ class DeezerService {
     async searchTrackFromCompleteRequestInBean(requestInBean) {
         const {title, album, artist} = requestInBean
 
-        let res = await axios.get(`/api/deezer/search/advanced?artist=${artist}&title=${title}&album=${album}&type=track`, {})
+        let res = await axios.get(`/api/deezer/search/advanced?artist=${artist.name}&title=${title}&album=${album.name}&type=track`, {})
             .catch(function (error) {
                 console.error(error)
             })
         if(res === null){
-            res = await axios.get(`/api/deezer/search/advanced?artist=${artist}&title=${title}&type=track`, {})
+            res = await axios.get(`/api/deezer/search/advanced?artist=${artist.name}&title=${title}&type=track`, {})
                 .catch(function (error) {
                     console.error(error)
                 })
         }
 
         const data = formatData(res)
-        return data.length === 0 ? [] : data[0]
+        return data.length === 0 ? false : data[0]
     }
 
     async searchTrackBasic(searchValue) {
@@ -36,6 +36,29 @@ class DeezerService {
 
         return formatData(res)
     }
+
+    async getTrackFromId(id) {
+        const {data} = await axios.get(`/api/deezer/get/tracks/${id}`, {}).catch(function (error) {
+            console.error(error);
+        });
+
+        return formatDeezerTrack(data)
+    }
+
+    async getPlaylist(search) {
+        let {url, limit, offset} = search
+        const {data} = await axios.get(`${url}?limit=${limit}&offset=${offset}`, {}).catch(function (error) {
+            console.error(error);
+        });
+
+        const items = data.data.map((item) => formatDeezerTrack(item))
+
+        return {
+            items,
+            total: data.total,
+        }
+    }
+
 }
 
 export default DeezerService

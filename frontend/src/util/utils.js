@@ -1,40 +1,14 @@
 import Track from "../modeles/Track";
+import fs from 'fs'
+import UserLite from "../modeles/UserLite";
 
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 export function formatSpotifyTrack(dataSpotifyToFormat) {
     return new Track(dataSpotifyToFormat)
-    //    return dataSpotifyToFormat.data.tracks.items
 }
-
 export function formatDeezerTrack(dataDeezerToFormat) {
-
-/*    const items = dataDeezerToFormat.data.data
-    return items.map((item) => {
-        return {
-            id: item.id,
-            name: item.title,
-            album: {
-                id: item.album.id,
-                name: item.album.title,
-                images: [
-                    {url: item.album.cover_big},
-                    {url: item.album.cover_medium},
-                    {url: item.album.cover_small},
-                ],
-                artists: [{
-                    id: item.artist.id,
-                    name: item.artist.name,
-                }],
-            },
-            artists: [{
-                id: item.artist.id,
-                name: item.artist.name,
-            }]
-        }
-    })*/
     return new Track({
         id: dataDeezerToFormat.id,
         name: dataDeezerToFormat.title,
@@ -55,5 +29,18 @@ export function formatDeezerTrack(dataDeezerToFormat) {
             id: dataDeezerToFormat.artist.id,
             name: dataDeezerToFormat.artist.name,
         }]
+    })
+}
+export function formatSimpleUser(userToFormat) {
+    return new UserLite(userToFormat)
+}
+
+export async function readFile(path) {
+    new Promise((resolve, reject) => {
+        fs.readFile('./properties/access.json', 'utf8', (err, data) => {
+            if (err)
+                reject(err)
+            resolve(JSON.parse(data))
+        })
     })
 }
