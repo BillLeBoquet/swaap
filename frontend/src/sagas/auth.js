@@ -1,15 +1,47 @@
 import {put, takeEvery} from 'redux-saga/effects'
 import {LOGIN_REQUEST, loginUser, toggleLoading} from "../modules/auth";
+import UserService from "../services/UserService";
 import axios from 'axios';
-import {sleep} from "../util/utils";
+import {formatSimpleUser, sleep} from "../util/utils";
+import Playlist from "../modeles/Playlist";
 
 function* requestLoginUser() {
     yield put(toggleLoading());
-    const {data} = yield axios.post('/api/user', {}).catch(function (error) {
-        console.log(error);
-    });
+    const user = yield new UserService().getSimpleUserForTest()
     yield sleep(200);
-    yield put(loginUser(data));
+    yield put(loginUser({
+        user,
+        playlists: [
+            new Playlist(
+                {
+                    name: 'Abigail',
+                    api: 1,
+                    id: '0Q3X3Gzo8JCnjG03Hkhcar',
+                }
+            ),
+            new Playlist(
+                {
+                    name: 'Bain moussant',
+                    api: 2,
+                    id: '908622995',
+                }
+            ),
+            new Playlist(
+                {
+                    name: 'Four Chord Song',
+                    api: 1,
+                    id: '6mS5EpeHaEh2AB6iRdTpPR',
+                }
+            ),
+            new Playlist(
+                {
+                    name: 'Les titres du moment',
+                    api: 2,
+                    id: '53362031',
+                }
+            ),
+        ]
+    }));
     yield put(toggleLoading());
 }
 

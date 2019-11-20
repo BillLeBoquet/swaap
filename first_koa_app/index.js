@@ -88,10 +88,40 @@ router.get('koala', '/', (ctx) => {
     ctx.body = "Welcome! To the Koala Book of Everything!"
 })
 
+/*
+ * example : get object from id http://localhost:1234/spotify/get/artists/0OdUWJ0sBjDrqHygGUXeCF
+ */
+router.get('get_playlist_spotify', '/api/spotify/get/playlists/:id/tracks',async (ctx) => {
+    const query = ctx.request.query
+    const {limit, offset} = query
+
+    let accessToken
+    if (await isAccessTokenValid()) {
+        //console.log('valid')
+        accessToken = (await readAccessToken())['access_token']
+    } else {
+        //console.log('expired')
+        accessToken = await getNewAccessToken()
+    }
+
+    const options = {
+        url: `https://api.spotify.com/v1/playlists/${ctx.params.id}/tracks?limit=${limit}&offset=${offset}`,
+        headers: { 'Authorization': 'Bearer ' + accessToken }
+    }
+
+    let res = await request(options, function (error, response, body) {
+        console.error('error : ', error)
+        console.log('statusCode : ', response && response.statusCode)
+        return body
+    })
+
+    ctx.body = res
+})
+
 /* 
  * example : get object from id http://localhost:1234/spotify/get/artists/0OdUWJ0sBjDrqHygGUXeCF
  */
-router.get('koala', '/api/spotify/get/:object/:id',async (ctx) => {
+router.get('get_data_spotify', '/api/spotify/get/:object/:id',async (ctx) => {
     let accessToken
     if (await isAccessTokenValid()) {
         //console.log('valid')
@@ -119,7 +149,7 @@ router.get('koala', '/api/spotify/get/:object/:id',async (ctx) => {
  * example : search track with artist and track name http://localhost:1234/spotify/search?q=artist:seether+track:careless%20whisper&type=track
  *           search track with track name only http://localhost:1234/spotify/search?q=track:careless%20whisper&type=track
  */
-router.get('koala', '/api/spotify/search', async (ctx) => {
+router.get('search_spotify', '/api/spotify/search', async (ctx) => {
     let query = ctx.request.query
     let type = query.type
     let search = query.q
@@ -140,6 +170,39 @@ router.get('koala', '/api/spotify/search', async (ctx) => {
 
     let res = await request(options, function (error, response, body) {
         console.error('error : ', error)
+        console.log('statusCode : ', response.statusCode)
+        return body
+    })
+
+    ctx.body = res
+})
+
+router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx) => {
+    const {query} = ctx.request
+    const {type, title, artist, album} = query
+    let url
+    if(album !== null) {
+        url = `https://api.spotify.com/v1/search?q=artist:${artist} track:${title} album:${album}&type=${type}`
+    } else {
+        url = `https://api.spotify.com/v1/search?q=artist:${artist} track:${title}&type=${type}"`
+    }
+
+    let accessToken
+    if (await isAccessTokenValid()) {
+        //console.log('valid')
+        accessToken = (await readAccessToken())['access_token']
+    } else {
+        //console.log('expired')
+        accessToken = await getNewAccessToken()
+    }
+
+    const options = {
+        url,
+        headers: { 'Authorization': 'Bearer ' + accessToken }
+    }
+
+    let res = await request(options, function (error, response, body) {
+        console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
     })
@@ -147,7 +210,24 @@ router.get('koala', '/api/spotify/search', async (ctx) => {
     ctx.body = res
 })
 
-router.get('koala', '/api/deezer/get/:object/:id', async (ctx) => {
+router.get('get_playlist_deezer', '/api/deezer/get/playlists/:id/tracks',async (ctx) => {
+    const query = ctx.request.query
+    const {limit, offset} = query
+
+    const options = {
+        url: `https://api.deezer.com/playlist/${ctx.params.id}/tracks?limit=${limit}&index=${offset}`,
+    }
+
+    let res = await request(options, function (error, response, body) {
+        console.error('error : ', error)
+        console.log('statusCode : ', response && response.statusCode)
+        return body
+    })
+
+    ctx.body = res
+})
+
+router.get('get_data_deezer', '/api/deezer/get/:object/:id', async (ctx) => {
 
     const options = {
         url: `https://api.deezer.com/${ctx.params.object}/${ctx.params.id}`
@@ -162,7 +242,7 @@ router.get('koala', '/api/deezer/get/:object/:id', async (ctx) => {
     ctx.body = res
 })
 
-router.get('koala', '/api/deezer/search/', async (ctx) => {
+router.get('search_deezer', '/api/deezer/search/', async (ctx) => {
     let search = ctx.request.query['q']
     let limit = 20 //TODO : See how to manage it
 
@@ -178,48 +258,21 @@ router.get('koala', '/api/deezer/search/', async (ctx) => {
         return body
     })
 
-    console.log(res)
-
     ctx.body = res
 })
 
 router.get('advanced_search_deezer', '/api/deezer/search/advanced', async (ctx) => {
     const {query} = ctx.request
-    const {title, artist, album} = query
-
-    const url = `https://api.deezer.com/search?q=artist:"${artist}"track:"${title}"`
-
-    const options = {
-        url: url
-    }
-
-    let res = await request(options, function (error, response, body) {
-        console.error('error : ', error)
-        console.log('statusCode : ', response && response.statusCode)
-        return body
-    })
-
-    ctx.body = res
-})
-
-router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx) => {
-    const {query} = ctx.request
-    const {type, title, artist, album} = query.q
-
-    const url = `https://api.spotify.com/v1/search?q=artist:${artist}track:${title}&type=${type}`
-
-    let accessToken
-    if (await isAccessTokenValid()) {
-        //console.log('valid')
-        accessToken = (await readAccessToken())['access_token']
+    const {title, artist, album, type} = query
+    let url
+    if(album !== null) {
+        url = `https://api.deezer.com/search?q=artist:"${artist}"track:"${title}""album:"${album}&type=${type}`
     } else {
-        //console.log('expired')
-        accessToken = await getNewAccessToken()
+        url = `https://api.deezer.com/search?q=artist:"${artist}"track:"${title}&type=track"`
     }
 
     const options = {
-        url: url,
-        headers: { 'Authorization': 'Bearer ' + accessToken }
+        url
     }
 
     let res = await request(options, function (error, response, body) {
@@ -233,10 +286,35 @@ router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx
 
 router.post('user', '/api/user', async (ctx) => {
     ctx.body = JSON.stringify({
-        name: 'Jeremie',
-        lastName: 'Bedjai',
-        role: 0
+        id: 1,
+        pseudo: 'Jeremy',
+        role: 0,
+        avatar: '/dist/assets/media/users/jeremy_morvan.jpg'
     })
+})
+
+router.get('get_user_playlist', '/api/user/playlist/:id', async (ctx) => {
+    let accessToken
+    if (await isAccessTokenValid()) {
+        //console.log('valid')
+        accessToken = (await readAccessToken())['access_token']
+    } else {
+        //console.log('expired')
+        accessToken = await getNewAccessToken()
+    }
+
+    const options = {
+        url: `https://api.spotify.com/v1/playlists/${ctx.params.id}`,
+        headers: { 'Authorization': 'Bearer ' + accessToken }
+    }
+
+    let res = await request(options, function (error, response, body) {
+        console.error('error : ', error)
+        console.log('statusCode : ', response && response.statusCode)
+        return body
+    })
+
+    ctx.body = res
 })
 
 app.use(router.routes())

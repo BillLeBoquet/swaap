@@ -2,6 +2,13 @@ export const ADD_TO_PLAYLIST = 'app/auth/ADD_TO_PLAYLIST'
 export const TOGGLE_ADD_TRACK = 'app/auth/TOGGLE_ADD_TRACK'
 export const ADD_TRACK = 'app/auth/ADD_TRACK'
 export const REMOVE_TRACK = 'app/auth/REMOVE_TRACK'
+export const GET_PLAYLIST = 'app/auth/GET_PLAYLIST'
+export const IMPORT_PLAYLIST = 'app/auth/IMPORT_PLAYLIST'
+export const IMPORT_PLAYLIST_PROGRESS = 'app/auth/IMPORT_PLAYLIST_PROGRESS'
+export const CONVERT_PLAYLIST_PROGRESS = 'app/auth/CONVERT_PLAYLIST_PROGRESS'
+
+export const IMPORT = 'IMPORT'
+export const CONVERSION = 'CONVERSION'
 
 function isPlaylistEmpty(apis) {
     return apis.spotify == null || apis.deezer == null || apis.spotify.length === 0 || apis.deezer.length === 0
@@ -44,11 +51,31 @@ export const toggleAddTrack = () => ({
     type: TOGGLE_ADD_TRACK,
 })
 
+export const getPlaylist = (api) => ({
+    type: IMPORT_PLAYLIST,
+    api,
+})
+
+export const importPlaylistProgress = (playlist) => ({
+    type: IMPORT_PLAYLIST_PROGRESS,
+    playlist,
+})
+
+export const convertPlaylistProgress = (playlist) => ({
+    type: CONVERT_PLAYLIST_PROGRESS,
+    playlist,
+})
+
+
 export default function reducer(
     state = {
         loadingAddTracks: false,
         playlists: [],
+        importedPlaylist: [],
         isPlaylistEmpty: true,
+        progressBar: 0,
+        uploadStatus: null,
+        isImport: false,
     },
     action,
 ) {
@@ -82,7 +109,23 @@ export default function reducer(
                 ...state,
                 loadingAddTrack: !state.loadingAddTrack,
            }
-
+        case IMPORT_PLAYLIST_PROGRESS:
+            return {
+                ...state,
+                progressBar: action.playlist.progress,
+                uploadStatus: IMPORT,
+                importedPlaylist: action.playlist,
+                isImport: false,
+            };
+        case CONVERT_PLAYLIST_PROGRESS:
+            return {
+                ...state,
+                progressBar: action.playlist.progress,
+                uploadStatus: CONVERSION,
+                importedPlaylist: action.playlist.playlist,
+                isImport: true,
+            };
+        //TODO : case for import playlist
         default:
             return state
     }

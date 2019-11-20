@@ -1,8 +1,8 @@
 class RequestInBean{
-    constructor(title, album, artist) {
+    constructor(title, album, artists) {
         this.title = title
         this.album = album
-        this.artist = artist
+        this.artist = (artists !== null) ? artists[0] : null
     }
 }
 
