@@ -38,9 +38,28 @@ class SpotifyService {
         return formatData(res)
     }
 
-    async getPlaylist(search) {
+    async getPlaylistFull(url) {
+        const res = await axios.get(`${url}`, {}).catch(function (error) {
+            console.error(error);
+        });
+
+        const items = res.data.tracks.items.map((item) => formatSpotifyTrack(item.track))
+
+        return {
+            items,
+            total: res.data.tracks.total,
+            playlistName: res.data.name,
+        }
+    }
+
+    async getPlaylistTracks(search) {
         let {url, limit, offset} = search
-        const res = await axios.get(`${url}?limit=${limit}&offset=${offset}`, {}).catch(function (error) {
+
+        const playlistFull = await axios.get(`${url}`, {}).catch(function (error) {
+            console.error(error);
+        });
+
+        const res = await axios.get(`${url}/tracks?limit=${limit}&offset=${offset}`, {}).catch(function (error) {
             console.error(error);
         });
 
@@ -49,6 +68,7 @@ class SpotifyService {
         return {
             items,
             total: res.data.total,
+            playlistName: playlistFull.name,
         }
     }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {requestLoginUser, logoutUser, detailUser} from '../modules/auth';
+import {requestLoginUser, detailUser} from '../modules/auth';
 import {toggleSearch} from '../modules/search';
 import {changeLocale} from "../modules/localize";
 

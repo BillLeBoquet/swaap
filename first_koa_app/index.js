@@ -12,7 +12,6 @@ const router = new koaRouter()
 function writeAccessToken(entry) {
     fs.writeFile('./properties/access.json', entry, (err) => {
         if (err) throw err;
-        //console.log('Access_token updated');
     })
 }
 
@@ -27,9 +26,9 @@ function readAccessToken() {
 }
 
 async function isAccessTokenValid() {
-    let dateNow = new Date()
-    let data = await readAccessToken()
-    let expiredAt = data['expired_at']
+    const dateNow = new Date()
+    const data = await readAccessToken()
+    const expiredAt = data['expired_at']
     return expiredAt > (dateNow.getTime() / 1000)
 }
 
@@ -109,7 +108,7 @@ router.get('get_playlist_spotify', '/api/spotify/get/playlists/:id/tracks',async
         headers: { 'Authorization': 'Bearer ' + accessToken }
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
@@ -124,10 +123,8 @@ router.get('get_playlist_spotify', '/api/spotify/get/playlists/:id/tracks',async
 router.get('get_data_spotify', '/api/spotify/get/:object/:id',async (ctx) => {
     let accessToken
     if (await isAccessTokenValid()) {
-        //console.log('valid')
         accessToken = (await readAccessToken())['access_token']
     } else {
-        //console.log('expired')
         accessToken = await getNewAccessToken()
     }
 
@@ -136,7 +133,7 @@ router.get('get_data_spotify', '/api/spotify/get/:object/:id',async (ctx) => {
         headers: { 'Authorization': 'Bearer ' + accessToken }
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
@@ -156,10 +153,8 @@ router.get('search_spotify', '/api/spotify/search', async (ctx) => {
 
     let accessToken
     if (await isAccessTokenValid()) {
-        //console.log('valid')
         accessToken = (await readAccessToken())['access_token']
     } else {
-        //console.log('expired')
         accessToken = await getNewAccessToken()
     }
 
@@ -168,7 +163,7 @@ router.get('search_spotify', '/api/spotify/search', async (ctx) => {
         headers: { 'Authorization': 'Bearer ' + accessToken }
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response.statusCode)
         return body
@@ -189,10 +184,8 @@ router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx
 
     let accessToken
     if (await isAccessTokenValid()) {
-        //console.log('valid')
         accessToken = (await readAccessToken())['access_token']
     } else {
-        //console.log('expired')
         accessToken = await getNewAccessToken()
     }
 
@@ -201,7 +194,7 @@ router.get('advanced_search_spotify', '/api/spotify/search/advanced', async (ctx
         headers: { 'Authorization': 'Bearer ' + accessToken }
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
@@ -218,7 +211,7 @@ router.get('get_playlist_deezer', '/api/deezer/get/playlists/:id/tracks',async (
         url: `https://api.deezer.com/playlist/${ctx.params.id}/tracks?limit=${limit}&index=${offset}`,
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
@@ -233,7 +226,7 @@ router.get('get_data_deezer', '/api/deezer/get/:object/:id', async (ctx) => {
         url: `https://api.deezer.com/${ctx.params.object}/${ctx.params.id}`
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
@@ -252,7 +245,7 @@ router.get('search_deezer', '/api/deezer/search/', async (ctx) => {
         url: url
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
@@ -275,7 +268,7 @@ router.get('advanced_search_deezer', '/api/deezer/search/advanced', async (ctx) 
         url
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
@@ -308,7 +301,7 @@ router.get('get_user_playlist', '/api/user/playlist/:id', async (ctx) => {
         headers: { 'Authorization': 'Bearer ' + accessToken }
     }
 
-    let res = await request(options, function (error, response, body) {
+    const res = await request(options, function (error, response, body) {
         console.error('error : ', error)
         console.log('statusCode : ', response && response.statusCode)
         return body
