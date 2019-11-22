@@ -1,4 +1,4 @@
-import {formatDeezerTrack, formatSpotifyTrack} from "../util/utils";
+import {formatDeezerTrack} from "../util/utils";
 import axios from "axios";
 
 function formatData(data) {
@@ -45,9 +45,24 @@ class DeezerService {
         return formatDeezerTrack(data)
     }
 
-    async getPlaylist(search) {
+    async getPlaylistFull(url) {
+
+        const res = await axios.get(`${url}`, {}).catch(function (error) {
+            console.error(error);
+        });
+
+        const items = res.data.tracks.data.map((item) => formatDeezerTrack(item))
+
+        return {
+            items,
+            total: res.data.nb_tracks,
+            playlistName: res.data.title,
+        }
+    }
+
+    async getPlaylistTracks(search) {
         let {url, limit, offset} = search
-        const {data} = await axios.get(`${url}?limit=${limit}&offset=${offset}`, {}).catch(function (error) {
+        const {data} = await axios.get(`${url}/tracks?limit=${limit}&offset=${offset}`, {}).catch(function (error) {
             console.error(error);
         });
 

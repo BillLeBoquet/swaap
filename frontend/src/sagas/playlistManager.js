@@ -9,19 +9,17 @@ import RequestInBean from "../modeles/RequestInBean";
 import DeezerService from "../services/DeezerService";
 import SpotifyService from "../services/SpotifyService";
 
-async function getPlaylistFromApi(input, spotifyService, deezerService) {
-    console.log('input')
-    console.log(input)
+async function getPlaylistTracksFromApi(input, spotifyService, deezerService) {
     switch (input.api) {
         case 1:
-            return spotifyService.getPlaylist({
-                url: `/api/spotify/get/playlists/${input.id}/tracks`,
+            return spotifyService.getPlaylistTracks({
+                url: `/api/spotify/get/playlists/${input.id}`,
                 limit: 100,
                 offset: input.length,
             })
         case 2:
-            return deezerService.getPlaylist({
-                url: `/api/deezer/get/playlists/${input.id}/tracks`,
+            return deezerService.getPlaylistTracks({
+                url: `/api/deezer/get/playlists/${input.id}`,
                 limit: 100,
                 offset: input.length,
             })
@@ -30,14 +28,26 @@ async function getPlaylistFromApi(input, spotifyService, deezerService) {
     }
 }
 
+async function getPlaylistFullFromApi(input, spotifyService, deezerService) {
+    switch (input.api) {
+        case 1:
+            return spotifyService.getPlaylistFull(`/api/spotify/get/playlists/${input.id}`)
+        case 2:
+            return deezerService.getPlaylistFull(`/api/deezer/get/playlist/${input.id}`)
+        default:
+            return null
+    }
+}
+
 function* addTrackToPlaylist(input) {
     //yield put(toggleAddTrack())
+
     const {track, api} = input
-    const artist = track.artists[0].name
+    const artists = track.artists
     const title = track.name
     const album = track.album.name
 
-    const requestInBean = new RequestInBean(title, album, artist)
+    const requestInBean = new RequestInBean(title, album, artists)
     let tracksFromApis
 
     switch(api) {
@@ -46,6 +56,7 @@ function* addTrackToPlaylist(input) {
 
             if(deezer === false) {
                 tracksFromApis = {}
+                //TODO : manage missing Track from Deezer
             } else{
                 tracksFromApis = {
                     spotify: track,
@@ -59,6 +70,7 @@ function* addTrackToPlaylist(input) {
 
             if(spotify === false) {
                 tracksFromApis = {}
+                //TODO : manage missing Track from Spotify
             } else {
                 tracksFromApis = {
                     spotify,
@@ -73,7 +85,6 @@ function* addTrackToPlaylist(input) {
             }
     }
     yield put(addResultToPlaylist(tracksFromApis))
-    //yield put(toggleAddTrack())
 }
 
 function* importPlaylistFromId(input) {
@@ -85,16 +96,21 @@ function* importPlaylistFromId(input) {
         items: [],
         total: 1,
     }
-    let tracks = []
     let requestInBean
 
-    let playlist = {
-        spotify: [],
-        deezer: [],
-    }
+    let playlist = []
 
-    do{
-        res = yield getPlaylistFromApi({
+    const playlistFull = yield getPlaylistFullFromApi({
+        api,
+        id,
+    }, spotifyService, deezerService)
+
+    let tracks = playlistFull.items
+    const {total, playlistName} = playlistFull
+
+
+    while(tracks.length < total){
+        res = yield getPlaylistTracksFromApi({
             api,
             length: tracks.length,
             id,
@@ -103,7 +119,7 @@ function* importPlaylistFromId(input) {
             ...tracks,
             ...res.items,
         ]
-    } while(tracks.length < res.total);
+    }
 
     switch (api){
         case 1 :
@@ -111,21 +127,20 @@ function* importPlaylistFromId(input) {
                 const track = tracks[index]
 
                 requestInBean = new RequestInBean(track.name, track.album, track.artists)
-                const deezer = yield new DeezerService().searchTrackFromCompleteRequestInBean(requestInBean)
-                if(deezer) {
-                    playlist = {
-                        deezer: [
-                            ...playlist.deezer,
-                            deezer,
-                        ],
-                        spotify: [
-                            ...playlist.spotify,
-                            track,
-                        ]
-                    }
+                const dataDeezer = yield new DeezerService().searchTrackFromCompleteRequestInBean(requestInBean)
+                if(dataDeezer) {
+                    playlist = [
+                        ...playlist,
+                        {
+                            dataDeezer,
+                            dataSpotify: track,
+                        }
+                    ]
                     yield put(convertPlaylistProgress({
                         playlist,
-                        progress: (playlist.deezer.length / res.total) * 100,
+                        progress: (playlist.length / total) * 100,
+                        id,
+                        playlistName,
                     }))
                 }
             }
@@ -135,21 +150,20 @@ function* importPlaylistFromId(input) {
                 const track = tracks[index]
 
                 requestInBean = new RequestInBean(track.name, track.album, track.artists)
-                const spotify = yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
-                if(spotify) {
-                    playlist = {
-                        deezer: [
-                            ...playlist.deezer,
-                            track,
-                        ],
-                        spotify: [
-                            ...playlist.spotify,
-                            spotify,
-                        ]
-                    }
+                const dataSpotify = yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
+                if(dataSpotify) {
+                    playlist = [
+                        ...playlist,
+                        {
+                            dataSpotify,
+                            dataDeezer: track,
+                        }
+                    ]
                     yield put(convertPlaylistProgress({
                         playlist,
-                        progress: (playlist.spotify.length / res.total) * 100,
+                        progress: (playlist.length / total) * 100,
+                        id,
+                        playlistName,
                     }))
                 }
             }
@@ -161,6 +175,8 @@ function* importPlaylistFromId(input) {
     yield put(convertPlaylistProgress({
         playlist,
         progress: 100,
+        id,
+        playlistName,
     }))
 }
 

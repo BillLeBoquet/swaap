@@ -4,10 +4,13 @@ import {detailUser, logoutUser} from "../modules/auth";
 import {getPlaylist} from "../modules/playlistManager";
 
 const UserDetails = () => {
-    const {user} = useSelector(state => state.auth);
-    const {showUserDetails, userPlaylists} = useSelector(state => state.auth);
+    const {user, showUserDetails, userPlaylists} = useSelector(state => state.auth);
+    const {progressBar, playlistId} = useSelector(state => state.playlists);
     const {token} = useSelector(state => state.localize);
     const dispatch = useDispatch()
+
+    const spotifyPlaylist = userPlaylists.filter(playlist => playlist.api === 1)
+    const deezerPlaylist = userPlaylists.filter(playlist => playlist.api === 2)
 
     return (
         <div id="kt_offcanvas_toolbar_profile"
@@ -37,9 +40,9 @@ const UserDetails = () => {
                             <img src={user.avatar} alt={user.pseudo}/>
                         </div>
                         <div className="kt-user-card-v3__detalis">
-                            <a href="#" className="kt-user-card-v3__name">
+                            <div className="kt-user-card-v3__name">
                                 {user.pseudo}
-                            </a>
+                            </div>
                         </div>
                     </div>
                 ) : (
@@ -49,56 +52,89 @@ const UserDetails = () => {
                     <h1 className="kt-offcanvas-panel__section kt-margin-t-50">
                         Vos playlist
                     </h1>
-                    <div className="kt-widget-1__items">
-                        <h6>
-                            Spotify
-                        </h6>
-                        <div>
-                            {
-                                userPlaylists
-                                    .filter(playlist => playlist.api === 1 )
-                                    .map((playlist, i) => {
-                                        return (
-                                            <button className="btn btn-outline-hover-brand btn-elevate btn-pill" key={i}
-                                                 onClick={() => dispatch(getPlaylist({
-                                                     api: 1,
-                                                     id: playlist.id,
-                                                 }))}>
-                                                {playlist.name}
-
-                                            </button>
-                                        )
-                                    })
-                            }
-                        </div>
-                    </div>
+                    <h6>
+                        Spotify
+                    </h6>
                     <div className="kt-widget-1__item">
-                        <div className="kt-widget-4__item-content">
-                            <div className="kt-widget-4__item-section">
-                                <div className="kt-widget-4__item-info">
-                                    <h6>
-                                        Deezer
-                                    </h6>
-                                    <div>
-                                        {
-                                            userPlaylists
-                                                .filter(playlist => playlist.api === 2 )
-                                                .map((playlist, i) => {
-                                                    return (
-                                                        <button className="btn btn-outline-hover-brand btn-elevate btn-pill"
-                                                                key={i} onClick={() => dispatch(getPlaylist({
-                                                                 api: 2,
-                                                                 id: playlist.id,
-                                                             }))}>
-                                                            {playlist.name}
-                                                        </button>
+                        {
+                            spotifyPlaylist.length ? spotifyPlaylist
+                                .map((playlist, i) => {
+                                    return (
+                                        <div key={i}>
+                                            <button className="btn btn-outline-hover-brand btn-elevate btn-pill"
+                                                    onClick={() => dispatch(getPlaylist({
+                                                                api: 1,
+                                                                id: playlist.id,
+                                                            })
+                                                        )}>
+                                                {playlist.name}
+                                                {
+                                                    playlist.id === playlistId ? (
+                                                        <div className="progress">
+                                                            <div className="progress-bar progress-bar-striped kt-bg-brand" role='progressbar'
+                                                                 style={{
+                                                                     width: progressBar + '%',
+                                                                 }}
+                                                                 aria-valuenow={progressBar}
+                                                                 aria-valuemin="0"
+                                                                 aria-valuemax="100"
+                                                            >
+                                                                {progressBar | 0}%
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div/>
                                                     )
-                                                })
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                                }
+                                            </button>
+                                        </div>
+                                    )
+                                }) : (
+                                <p>{token.missing_playlist.spotify}</p>
+                            )
+                        }
+                    </div>
+                    &nbsp;
+                    <h6>
+                        Deezer
+                    </h6>
+                    <div className="kt-widget-1__item">
+                        {
+                            deezerPlaylist.length ? deezerPlaylist
+                                .map((playlist, i) => {
+                                    return (
+                                        <div key={i}>
+                                            <button className="btn btn-outline-hover-brand btn-elevate btn-pill"
+                                                    onClick={() => dispatch(getPlaylist({
+                                                        api: 2,
+                                                        id: playlist.id,
+                                                    }))}>
+                                                {playlist.name}
+                                                {
+                                                    playlist.id === playlistId ? (
+                                                        <div className="progress">
+                                                            <div className="progress-bar progress-bar-striped kt-bg-brand" role='progressbar'
+                                                                 style={{
+                                                                     width: progressBar + '%',
+                                                                 }}
+                                                                 aria-valuenow={progressBar}
+                                                                 aria-valuemin="0"
+                                                                 aria-valuemax="100"
+                                                            >
+                                                                {progressBar | 0}%
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div/>
+                                                    )
+                                                }
+                                            </button>
+                                        </div>
+                                    )
+                                }) : (
+                                    <p>{token.missing_playlist.deezer}</p>
+                                )
+                        }
                     </div>
                 </div>
                 <div className="kt-margin-t-40">

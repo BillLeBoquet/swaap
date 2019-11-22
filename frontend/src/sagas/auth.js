@@ -1,8 +1,7 @@
 import {put, takeEvery} from 'redux-saga/effects'
 import {LOGIN_REQUEST, loginUser, toggleLoading} from "../modules/auth";
 import UserService from "../services/UserService";
-import axios from 'axios';
-import {formatSimpleUser, sleep} from "../util/utils";
+import {sleep} from "../util/utils";
 import Playlist from "../modeles/Playlist";
 
 function* requestLoginUser() {
@@ -35,9 +34,16 @@ function* requestLoginUser() {
             ),
             new Playlist(
                 {
-                    name: 'Les titres du moment',
+                    name: 'Deezer Hits',
                     api: 2,
-                    id: '53362031',
+                    id: '1363560485',
+                }
+            ),
+            new Playlist(
+                {
+                    name: 'TestSpotify',
+                    api: 1,
+                    id: '6S68vzLdJuad4UTULCKZfj',
                 }
             ),
         ]

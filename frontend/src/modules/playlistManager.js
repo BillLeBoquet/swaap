@@ -1,11 +1,11 @@
-export const ADD_TO_PLAYLIST = 'app/auth/ADD_TO_PLAYLIST'
-export const TOGGLE_ADD_TRACK = 'app/auth/TOGGLE_ADD_TRACK'
-export const ADD_TRACK = 'app/auth/ADD_TRACK'
-export const REMOVE_TRACK = 'app/auth/REMOVE_TRACK'
-export const GET_PLAYLIST = 'app/auth/GET_PLAYLIST'
-export const IMPORT_PLAYLIST = 'app/auth/IMPORT_PLAYLIST'
-export const IMPORT_PLAYLIST_PROGRESS = 'app/auth/IMPORT_PLAYLIST_PROGRESS'
-export const CONVERT_PLAYLIST_PROGRESS = 'app/auth/CONVERT_PLAYLIST_PROGRESS'
+export const ADD_TO_PLAYLIST = 'app/playlistManager/ADD_TO_PLAYLIST'
+export const TOGGLE_ADD_TRACK = 'app/playlistManager/TOGGLE_ADD_TRACK'
+export const ADD_TRACK = 'app/playlistManager/ADD_TRACK'
+export const REMOVE_TRACK = 'app/playlistManager/REMOVE_TRACK'
+export const UPDATE_PLAYLIST_NAME = 'app/playlistManager/UPDATE_PLAYLIST_NAME'
+export const IMPORT_PLAYLIST = 'app/playlistManager/IMPORT_PLAYLIST'
+export const IMPORT_PLAYLIST_PROGRESS = 'app/playlistManager/IMPORT_PLAYLIST_PROGRESS'
+export const CONVERT_PLAYLIST_PROGRESS = 'app/playlistManager/CONVERT_PLAYLIST_PROGRESS'
 
 export const IMPORT = 'IMPORT'
 export const CONVERSION = 'CONVERSION'
@@ -66,16 +66,19 @@ export const convertPlaylistProgress = (playlist) => ({
     playlist,
 })
 
+export const updatePlaylistName = (input) => ({
+    type: UPDATE_PLAYLIST_NAME,
+    input,
+})
 
 export default function reducer(
     state = {
         loadingAddTracks: false,
         playlists: [],
-        importedPlaylist: [],
         isPlaylistEmpty: true,
-        progressBar: 0,
-        uploadStatus: null,
-        isImport: false,
+        progressBar: 100,
+        playlistId: 1,
+        playlistName: '',
     },
     action,
 ) {
@@ -113,17 +116,20 @@ export default function reducer(
             return {
                 ...state,
                 progressBar: action.playlist.progress,
-                uploadStatus: IMPORT,
-                importedPlaylist: action.playlist,
-                isImport: false,
             };
         case CONVERT_PLAYLIST_PROGRESS:
             return {
                 ...state,
                 progressBar: action.playlist.progress,
-                uploadStatus: CONVERSION,
-                importedPlaylist: action.playlist.playlist,
-                isImport: true,
+                isPlaylistEmpty: action.playlist.playlist.length === 0,
+                playlists: action.playlist.playlist,
+                playlistId: action.playlist.id,
+                playlistName: action.playlist.playlistName,
+            };
+            case UPDATE_PLAYLIST_NAME:
+            return {
+                ...state,
+                playlistName: action.input,
             };
         //TODO : case for import playlist
         default:
