@@ -4,7 +4,21 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             primaryKey: true
         },
-        pseudo: {
+        username: {
+            type: Sequelize.STRING,
+            unique: true
+        },
+        email: {
+            type: Sequelize.STRING,
+            unique: true
+        },
+        password: {
+            type: Sequelize.STRING
+        },
+        first_name: {
+            type: Sequelize.STRING
+        },
+        name: {
             type: Sequelize.STRING
         }
     });

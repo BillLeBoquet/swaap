@@ -1,8 +1,8 @@
 const env = {
-    database: 'swaap',
-    username: 'swaap_admin@swaap',
-    password: 'P@ssw0rd',
-    host: 'swaap.mysql.database.azure.com',
+    database: 'P3JMopUXfu',
+    username: 'P3JMopUXfu',
+    password: '1EAgUR0g6Z',
+    host: 'remotemysql.com',
     dialect: 'mysql',
     pool: {
       max: 5,
