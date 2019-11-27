@@ -1,6 +1,7 @@
 export const SEARCH_REQUEST = 'app/auth/SEARCH_REQUEST'
 export const TOGGLE_SEARCHBAR = 'app/auth/SEARCHBAR'
 export const DISPLAY_TRACKS = 'app/auth/TRACKS'
+export const SELECT_API = 'app/auth/SELECT_API'
 
 export const toggleSearch = () => ({
     type: TOGGLE_SEARCHBAR,
@@ -16,13 +17,20 @@ export const displayTracks = (tracks) => ({
     tracks,
 })
 
+export const selectApi = (selection) =>  ({
+    type: SELECT_API,
+    selection,
+})
+
 export default function reducer(
     state = {searchBar: false,
         searchValue: '',
         tracks: {
             dataDeezer: {},
             dataSpotify: {},
-        }},
+        },
+        isDataAvailable: false,
+        api: 1},
     action,
 ) {
     switch (action.type) {
@@ -31,6 +39,7 @@ export default function reducer(
                 ...state,
                 searchBar: !state.searchBar,
                 searchValue: '',
+                isDataAvailable: false,
             }
         case SEARCH_REQUEST:
             return {
@@ -44,6 +53,12 @@ export default function reducer(
                     dataDeezer: action.tracks.dataDeezer,
                     dataSpotify: action.tracks.dataSpotify,
                 },
+                isDataAvailable: action.tracks.dataSpotify.length > 0 || action.tracks.dataDeezer.data != null
+            }
+        case SELECT_API:
+            return {
+                ...state,
+                api: action.selection,
             }
         default:
             return state
