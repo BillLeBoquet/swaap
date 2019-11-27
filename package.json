@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "start": "front & back start",
+        "dev": "(cd first-koa-app && node index.js) & (cd frontend && yarn start) "
+  }
+}
