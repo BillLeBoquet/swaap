@@ -1,7 +1,7 @@
 import axios from "axios";
 import {formatSpotifyTrack} from "../util/utils";
 
-function formatData(data) {
+export function formatData(data) {
     try {
         return data.data.tracks.items.map((item) => formatSpotifyTrack(item))
     } catch (e) {
