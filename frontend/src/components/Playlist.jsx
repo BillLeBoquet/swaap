@@ -62,10 +62,11 @@ const Playlist = (props) => {
                             onClick={() => dispatch(getPlaylist({
                                     api: api,
                                     id: playlist.id,
+                                    image: playlist.image,
                                 })
                             )}
                         >
-                            <i className="fa fa-upload"/>
+                            <i className="fa fa-download"/>
                         </button>
                     )
                 }

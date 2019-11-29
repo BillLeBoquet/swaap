@@ -40,7 +40,7 @@ async function getPlaylistFullFromApi(input, spotifyService, deezerService) {
 }
 
 function* importSavedPlaylistFromId(input) {
-    const {tracks, id, playlistName} = input.savedPlaylist
+    const {tracks, id, playlistName, image} = input.savedPlaylist
     const total = tracks.length
     const spotifyService = new SpotifyService()
     const deezerService = new DeezerService()
@@ -65,6 +65,7 @@ function* importSavedPlaylistFromId(input) {
             progress: (tracks.length / total) * 100,
             id,
             playlistName,
+            image,
         }))
     }
 
@@ -73,6 +74,7 @@ function* importSavedPlaylistFromId(input) {
         progress: 100,
         id,
         playlistName,
+        image,
     }))
 
 }
@@ -126,7 +128,7 @@ function* addTrackToPlaylist(input) {
 }
 
 function* importPlaylistFromId(input) {
-    const {api, id} = input.api
+    const {api, id, image} = input.api
     const spotifyService = new SpotifyService()
     const deezerService = new DeezerService()
 
@@ -179,6 +181,7 @@ function* importPlaylistFromId(input) {
                         progress: (playlist.length / total) * 100,
                         id,
                         playlistName,
+                        image,
                     }))
                 }
             }
@@ -202,6 +205,7 @@ function* importPlaylistFromId(input) {
                         progress: (playlist.length / total) * 100,
                         id,
                         playlistName,
+                        image,
                     }))
                 }
             }
@@ -215,6 +219,7 @@ function* importPlaylistFromId(input) {
         progress: 100,
         id,
         playlistName,
+        image,
     }))
 }
 

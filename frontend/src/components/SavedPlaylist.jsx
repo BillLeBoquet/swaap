@@ -63,9 +63,10 @@ const SavedPlaylist = (props) => {
                                 id: playlist.id,
                                 tracks: playlist.tracks,
                                 playlistName: playlist.name,
+                                image: playlist.image,
                             }))}
                         >
-                            <i className="fa fa-upload"/>
+                            <i className="fa fa-download"/>
                         </button>
                     )
                 }

@@ -78,6 +78,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -102,6 +103,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -126,6 +128,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -150,6 +153,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -174,6 +178,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -198,6 +203,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -222,6 +228,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -246,6 +253,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -270,6 +278,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -294,6 +303,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
             new PlaylistSaved(
@@ -318,6 +328,7 @@ function* requestLoginUser() {
                             deezer: "104623136",
                         },
                     ],
+                    image: "https://i.ytimg.com/vi/zecueq-mo4M/maxresdefault.jpg",
                 }
             ),
         ]

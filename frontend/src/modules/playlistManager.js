@@ -80,6 +80,7 @@ export default function reducer(
         progressBar: 0,
         playlistId: 0,
         playlistName: '',
+        playlistImage: '',
     },
     action,
 ) {
@@ -118,6 +119,7 @@ export default function reducer(
                 playlists: action.playlist.playlist,
                 playlistId: action.playlist.id,
                 playlistName: action.playlist.playlistName,
+                playlistImage: action.playlist.image,
             };
         case UPDATE_PLAYLIST_NAME:
             return {
@@ -131,6 +133,7 @@ export default function reducer(
                 progressBar: 0,
                 playlistId: 0,
                 playlistName: '',
+                playlistImage: '',
             }
         default:
             return state

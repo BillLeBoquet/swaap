@@ -6,7 +6,7 @@ import {resetPlaylist, updatePlaylistName} from "../modules/playlistManager";
 
 const PlaylistManager = () => {
     const {tracks, searchBar, searchValue, api} = useSelector(state => state.search)
-    const {playlists, progressBar, playlistName} = useSelector(state => state.playlists)
+    const {playlists, progressBar, playlistName, playlistImage} = useSelector(state => state.playlists)
     const {token} = useSelector(state => state.localize)
     const dispatch = useDispatch()
 
@@ -135,12 +135,20 @@ const PlaylistManager = () => {
                             <div className="kt-section">
                                 <div className="kt-section__info">
                                     <div className="kt-quick-search kt-quick-search--offcanvas" id="kt_quick_search_offcanvas" >
-                                        <div className="kt-quick-search__form">
-                                            <div className="input-group">
-                                                <input type="text" className="form-control kt-quick-search__input"
+                                        <div className="kt-quick-search__form row">
+                                            <div className="kt-media kt-media--xl">
+                                                <img src={playlistImage} alt={playlistName}/>
+                                            </div>
+                                            &nbsp;
+                                            &nbsp;
+                                            <div className="input-group" style={{width: "90%"}}>
+                                                <input type="text" className="form-control"
                                                        placeholder={token.playlist_title_placeholder} name="query"
                                                        value={playlistName}
                                                        onChange={(event) => dispatch(updatePlaylistName(event.target.value))}
+                                                       style={{
+                                                           top: "60%"
+                                                       }}
                                                 />
                                             </div>
                                         </div>
