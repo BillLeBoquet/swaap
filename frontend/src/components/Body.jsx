@@ -28,7 +28,7 @@ const Body = () => {
                                     <div className="kt-widget-2">
                                         <div className="kt-widget-2__content kt-portlet__space-x">
                                             <div className="row">
-                                                {playlistsSaved !== null ?
+                                                {playlistsSaved.length ?
                                                     playlistsSaved
                                                         .map((playlist) => {
                                                                 return (
@@ -36,7 +36,7 @@ const Body = () => {
                                                                 )
                                                             }
                                                         ) : (
-                                                        <div/>
+                                                        <p>{token.missing_playlist.saved}</p>
                                                     )}
                                             </div>
                                         </div>

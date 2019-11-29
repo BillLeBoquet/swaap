@@ -10,7 +10,7 @@ const SavedPlaylist = (props) => {
     const {token} = useSelector(state => state.localize);
 
     return (
-        <div className="col-xl-4 justify-content-lg-center" align="center">
+        <div className="col-xl-2 justify-content-lg-center" align="center">
             <div className="kt-widget-2__item">
                 {
                     playlist.image ? (
