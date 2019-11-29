@@ -6,6 +6,7 @@ export const UPDATE_PLAYLIST_NAME = 'app/playlistManager/UPDATE_PLAYLIST_NAME'
 export const IMPORT_PLAYLIST = 'app/playlistManager/IMPORT_PLAYLIST'
 export const CONVERT_PLAYLIST_PROGRESS = 'app/playlistManager/CONVERT_PLAYLIST_PROGRESS'
 export const RESET_PLAYLIST = 'app/playlistManager/RESET_PLAYLIST'
+export const GET_SAVED_PLAYLIST = 'app/playlistManager/GET_SAVED_PLAYLIST'
 
 function removeItemFromPlaylist(playlist, action) {
     const {api, id} = action
@@ -16,6 +17,13 @@ function removeItemFromPlaylist(playlist, action) {
             return playlist.filter((tuple) => tuple.dataDeezer.id !== id)
         default:
             return playlist
+    }
+}
+
+export function getSavedPlaylist(savedPlaylist) {
+    return {
+        type: GET_SAVED_PLAYLIST,
+        savedPlaylist,
     }
 }
 
@@ -70,7 +78,7 @@ export default function reducer(
         loadingAddTracks: false,
         playlists: [],
         progressBar: 0,
-        playlistId: 1,
+        playlistId: 0,
         playlistName: '',
     },
     action,
@@ -121,7 +129,7 @@ export default function reducer(
                 ...state,
                 playlists: [],
                 progressBar: 0,
-                playlistId: 1,
+                playlistId: 0,
                 playlistName: '',
             }
         default:

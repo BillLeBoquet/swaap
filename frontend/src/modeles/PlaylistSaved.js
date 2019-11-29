@@ -1,10 +1,10 @@
-class Playlist{
+class PlaylistSaved{
     constructor(playlist) {
         this.id = playlist.id
         this.name = playlist.name
-        this.api = playlist.api
+        this.tracks = playlist.tracks
         this.image = playlist.image
     }
 }
 
-export default Playlist
+export default PlaylistSaved
