@@ -42,8 +42,12 @@ const PlaylistManager = () => {
                  display: "block",
                  zIndex: !searchBar ? "-1" : "1050",
              }}>
-            <div className="modal-dialog modal-xl" role="document" >
-                <div className="modal-content">
+            <div className="modal-dialog modal-xl" role="document" style={{
+                top: '10%'
+            }}>
+                <div className="modal-content" style={{
+                    maxHeight: '620px'
+                }}>
                     <div className="kt-portlet">
                         <div className="kt-portlet__head">
                             <div className="kt-portlet__head-label">
@@ -69,7 +73,9 @@ const PlaylistManager = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-group">
+                            <div className="form-group" style={{
+                                marginBottom: '-1rem'
+                            }}>
                                 <div className="kt-radio-inline">
                                     <div className="btn-toolbar justify-content-between">
                                         <div className="kt-widget__toolbar">
@@ -135,7 +141,9 @@ const PlaylistManager = () => {
                             <div className="kt-section">
                                 <div className="kt-section__info">
                                     <div className="kt-quick-search kt-quick-search--offcanvas" id="kt_quick_search_offcanvas" >
-                                        <div className="kt-quick-search__form row">
+                                        <div className="kt-quick-search__form row" style={{
+                                            marginBottom: '-2rem'
+                                        }}>
                                             <div className="kt-media kt-media--xl">
                                                 <img src={playlistImage} alt={playlistName}/>
                                             </div>
