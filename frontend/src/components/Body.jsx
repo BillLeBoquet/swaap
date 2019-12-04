@@ -113,6 +113,9 @@ const Body = () => {
             </div>
             {showUserDetails ? (
                 <div className="kt-offcanvas-panel-overlay"
+                     style={{
+                         zIndex: '1052'
+                     }}
                      onClick={() => dispatch(detailUser())}
                 />
             ) : (

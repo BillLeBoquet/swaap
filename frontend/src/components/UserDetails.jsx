@@ -14,6 +14,7 @@ const UserDetails = () => {
                  "kt-offcanvas-panel"
              ].join(' ')}
              style={{
+                 zIndex: '1052',
                  opacity: "1",
              }}>
             <div className="kt-offcanvas-panel__head" kt-hidden-height="89" >
