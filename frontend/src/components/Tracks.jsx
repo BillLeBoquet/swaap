@@ -10,7 +10,7 @@ const Tracks = (props) => {
 
             <div className="col-xl-6 kt-scroll ps ps--active-y" data-scroll="true"
                  style={{
-                     maxHeight: "300px",
+                     maxHeight: "250px",
                      overflow: "hidden"
                  }}
             >

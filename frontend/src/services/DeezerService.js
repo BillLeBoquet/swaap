@@ -38,7 +38,7 @@ class DeezerService {
     }
 
     async getTrackFromId(id) {
-        const {data} = await axios.get(`/api/deezer/get/tracks/${id}`, {}).catch(function (error) {
+        const {data} = await axios.get(`/api/deezer/get/track/${id}`, {}).catch(function (error) {
             console.error(error);
         });
 
