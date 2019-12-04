@@ -1,5 +1,6 @@
 import Album from "./Album";
 import Artist from "./Artist";
+
 class Track{
     constructor(track) {
         this.id = track.id
