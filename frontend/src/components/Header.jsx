@@ -10,7 +10,9 @@ const Header = () => {
     const dispatch = useDispatch()
 
     return (
-        <div id="kt_header" className="kt-header kt-grid__item kt-grid kt-grid--ver  kt-header--fixed ">
+        <div id="kt_header" className="kt-header kt-grid__item kt-grid kt-grid--ver  kt-header--fixed " style={{
+            zIndex: '1051'
+        }}>
             <div className="kt-header__brand kt-grid__item" id="kt_header_brand">
                 <div>
                     <img alt="Logo" src="/dist/assets/media/logos/logo-1.png"/>

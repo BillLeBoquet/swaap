@@ -4,15 +4,9 @@ export const ADD_TRACK = 'app/playlistManager/ADD_TRACK'
 export const REMOVE_TRACK = 'app/playlistManager/REMOVE_TRACK'
 export const UPDATE_PLAYLIST_NAME = 'app/playlistManager/UPDATE_PLAYLIST_NAME'
 export const IMPORT_PLAYLIST = 'app/playlistManager/IMPORT_PLAYLIST'
-export const IMPORT_PLAYLIST_PROGRESS = 'app/playlistManager/IMPORT_PLAYLIST_PROGRESS'
 export const CONVERT_PLAYLIST_PROGRESS = 'app/playlistManager/CONVERT_PLAYLIST_PROGRESS'
-
-export const IMPORT = 'IMPORT'
-export const CONVERSION = 'CONVERSION'
-
-function isPlaylistEmpty(apis) {
-    return apis.spotify == null || apis.deezer == null || apis.spotify.length === 0 || apis.deezer.length === 0
-}
+export const RESET_PLAYLIST = 'app/playlistManager/RESET_PLAYLIST'
+export const GET_SAVED_PLAYLIST = 'app/playlistManager/GET_SAVED_PLAYLIST'
 
 function removeItemFromPlaylist(playlist, action) {
     const {api, id} = action
@@ -23,6 +17,13 @@ function removeItemFromPlaylist(playlist, action) {
             return playlist.filter((tuple) => tuple.dataDeezer.id !== id)
         default:
             return playlist
+    }
+}
+
+export function getSavedPlaylist(savedPlaylist) {
+    return {
+        type: GET_SAVED_PLAYLIST,
+        savedPlaylist,
     }
 }
 
@@ -56,11 +57,6 @@ export const getPlaylist = (api) => ({
     api,
 })
 
-export const importPlaylistProgress = (playlist) => ({
-    type: IMPORT_PLAYLIST_PROGRESS,
-    playlist,
-})
-
 export const convertPlaylistProgress = (playlist) => ({
     type: CONVERT_PLAYLIST_PROGRESS,
     playlist,
@@ -71,14 +67,20 @@ export const updatePlaylistName = (input) => ({
     input,
 })
 
+export function resetPlaylist() {
+    return {
+        type: RESET_PLAYLIST,
+    }
+}
+
 export default function reducer(
     state = {
         loadingAddTracks: false,
         playlists: [],
-        isPlaylistEmpty: true,
-        progressBar: 100,
-        playlistId: 1,
+        progressBar: 0,
+        playlistId: 0,
         playlistName: '',
+        playlistImage: '',
     },
     action,
 ) {
@@ -97,7 +99,6 @@ export default function reducer(
                         dataDeezer : action.apis.deezer,
                     }
                 ],
-                isPlaylistEmpty: isPlaylistEmpty(action.apis),
                 loadingAddTrack: false,
             }
         case REMOVE_TRACK:
@@ -105,33 +106,35 @@ export default function reducer(
             return {
                 ...state,
                 playlists: newPlaylist,
-                isPlaylistEmpty: (newPlaylist.length === 0),
             }
         case TOGGLE_ADD_TRACK:
             return {
                 ...state,
                 loadingAddTrack: !state.loadingAddTrack,
            }
-        case IMPORT_PLAYLIST_PROGRESS:
-            return {
-                ...state,
-                progressBar: action.playlist.progress,
-            };
         case CONVERT_PLAYLIST_PROGRESS:
             return {
                 ...state,
                 progressBar: action.playlist.progress,
-                isPlaylistEmpty: action.playlist.playlist.length === 0,
                 playlists: action.playlist.playlist,
                 playlistId: action.playlist.id,
                 playlistName: action.playlist.playlistName,
+                playlistImage: action.playlist.image,
             };
-            case UPDATE_PLAYLIST_NAME:
+        case UPDATE_PLAYLIST_NAME:
             return {
                 ...state,
                 playlistName: action.input,
             };
-        //TODO : case for import playlist
+        case RESET_PLAYLIST:
+            return {
+                ...state,
+                playlists: [],
+                progressBar: 0,
+                playlistId: 0,
+                playlistName: '',
+                playlistImage: '',
+            }
         default:
             return state
     }

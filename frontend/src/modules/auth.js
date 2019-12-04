@@ -7,7 +7,9 @@ export const USER_DETAILS = 'app/auth/USER_DETAILS'
 export const loginUser = (userInfo) => ({
     type: LOGIN,
     user: userInfo.user,
-    playlists: userInfo.playlists
+    playlistsDeezer: userInfo.playlistsDeezer,
+    playlistsSpotify: userInfo.playlistsSpotify,
+    playlistsSaved: userInfo.playlistsSaved,
 })
 
 export const logoutUser = () => ({
@@ -31,7 +33,9 @@ export default function reducer(
         user: null,
         loading: false,
         showUserDetails: false,
-        userPlaylists: [],
+        playlistsDeezer: [],
+        playlistsSpotify: [],
+        playlistsSaved: [],
     },
     action,
 ) {
@@ -40,14 +44,18 @@ export default function reducer(
             return {
                 ...state,
                 user: action.user,
-                userPlaylists: action.playlists,
+                playlistsDeezer: action.playlistsDeezer,
+                playlistsSpotify: action.playlistsSpotify,
+                playlistsSaved: action.playlistsSaved,
             }
         case LOGOUT:
             return {
                 ...state,
                 user: null,
                 showUserDetails: false,
-                userPlaylists: [],
+                playlistsDeezer: [],
+                playlistsSpotify: [],
+                playlistsSaved: [],
             }
         case TOGGLE_LOADING:
             return {
