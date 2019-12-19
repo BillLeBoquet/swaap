@@ -11,7 +11,10 @@ const SavedPlaylist = (props) => {
 
     return (
         <div className="col-xl-2 justify-content-lg-center" align="center">
-            <div className="kt-widget-2__item">
+            <div className="kt-widget-2__item" style={{
+                width: '186px',
+                height: '186px'
+            }}>
                 {
                     playlist.image ? (
                         <div className="kt-media kt-media--xl">

@@ -4,8 +4,11 @@ import {detailUser} from "../modules/auth";
 import PlaylistManager from "./PlaylistManager";
 import Playlist from "./Playlist";
 import SavedPlaylist from "./SavedPlaylist";
+import {resetSearch, toggleSearch} from "../modules/search";
+import {resetPlaylist} from "../modules/playlistManager";
 
 const Body = () => {
+    const {user} = useSelector(state => state.auth);
     const {playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize);
     const {searchBar} = useSelector(state => state.search)
@@ -37,7 +40,46 @@ const Body = () => {
                                                             }
                                                         ) : (
                                                         <p>{token.missing_playlist.saved}</p>
-                                                    )}
+                                                    )
+                                                }
+                                                {
+                                                    user ? (
+                                                        <div className="col-xl-2 justify-content-lg-center" align="center"
+                                                             style={{
+                                                                 paddingTop: '2rem'
+                                                             }}
+                                                        >
+                                                            <div className="kt-widget-2__item" style={{
+                                                                width: '120px',
+                                                                height: '120px',
+                                                            }}>
+                                                                <div className="kt-media kt-media--xl"
+                                                                     style={{
+                                                                        paddingTop: '1rem',
+                                                                    }}
+                                                                >
+                                                                    <button type="button" className="btn btn-lg btn-outline-brand btn-icon"
+                                                                            style={{
+                                                                                maxWidth: 200,
+                                                                                whiteSpace: 'nowrap',
+                                                                                textOverflow: 'ellipsis',
+                                                                                overflow: 'hidden'
+                                                                            }}
+                                                                            onClick={() => {
+                                                                                dispatch(resetSearch())
+                                                                                dispatch(resetPlaylist())
+                                                                                dispatch(toggleSearch())
+                                                                            }}
+                                                                    >
+                                                                        <i className="flaticon2-add-1"/>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div/>
+                                                    )
+                                                }
                                             </div>
                                         </div>
                                     </div>
