@@ -16,4 +16,10 @@ module.exports = function(app) {
  
     // Delete a Customer with Id
     app.delete('/api/songs/:songId', controller.delete);
+    
+    //get deezer song from spotifyId
+    app.get('/api/deezerSong/:spotifyId', controller.getDeezerId);
+
+    //get spotify song from deezerId
+    app.get('/api/spotifySong/:deezerId', controller.getSpotifyId);
 }
