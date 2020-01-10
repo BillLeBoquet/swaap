@@ -4,7 +4,7 @@ import {addTrackToPlaylist, removeResultFromPlaylilst} from "../modules/playlist
 
 const Tracks = (props) => {
     const tracks = props.items
-    const {api, isPlaylist} = props
+    const {api, isPlaylist, trackCorrelation} = props
     const dispatch = useDispatch()
     return (
 
@@ -54,7 +54,8 @@ const Tracks = (props) => {
                                                     <button type="button" className="btn btn-outline-brand btn-icon btn-circle"
                                                             onClick={() => dispatch(addTrackToPlaylist({
                                                                 track,
-                                                                api
+                                                                api,
+                                                                trackCorrelation,
                                                             }))}>
                                                         <i className="flaticon2-add-1"/>
                                                     </button>

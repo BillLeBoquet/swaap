@@ -20,6 +20,18 @@ function removeItemFromPlaylist(playlist, action) {
     }
 }
 
+function addNewCorrelation(tuple, trackCorrelation) {
+    const newId = tuple.dataSpotify
+    const find = trackCorrelation.find((tuple) => tuple.dataSpotify === newId)
+
+    return find !== undefined
+        ? trackCorrelation
+        : [
+            ...trackCorrelation,
+            tuple,
+        ]
+}
+
 export function getSavedPlaylist(savedPlaylist) {
     return {
         type: GET_SAVED_PLAYLIST,
@@ -32,12 +44,13 @@ export const addTrackToPlaylist = (input) => {
         type: ADD_TO_PLAYLIST,
         api: input.api,
         track: input.track,
+        trackCorrelation: input.trackCorrelation,
     }
 }
 
 export const addResultToPlaylist = (apis) => ({
     type: ADD_TRACK,
-    apis
+    apis,
 })
 
 
@@ -46,10 +59,6 @@ export const removeResultFromPlaylilst = (input) => ({
     id: input.id,
     api: input.api,
 
-})
-
-export const toggleAddTrack = () => ({
-    type: TOGGLE_ADD_TRACK,
 })
 
 export const getPlaylist = (api) => ({
@@ -81,6 +90,7 @@ export default function reducer(
         playlistId: 0,
         playlistName: '',
         playlistImage: '',
+        trackCorrelation: [],
     },
     action,
 ) {
@@ -90,6 +100,10 @@ export default function reducer(
                 ...state,
             }
         case ADD_TRACK:
+            const newTrackCorrelation = addNewCorrelation({
+                    dataSpotify :  action.apis.spotify.id,
+                    dataDeezer : action.apis.deezer.id,
+                }, state.trackCorrelation)
             return {
                 ...state,
                 playlists : [
@@ -99,6 +113,7 @@ export default function reducer(
                         dataDeezer : action.apis.deezer,
                     }
                 ],
+                trackCorrelation : newTrackCorrelation,
                 loadingAddTrack: false,
             }
         case REMOVE_TRACK:
