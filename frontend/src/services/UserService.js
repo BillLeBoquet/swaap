@@ -12,6 +12,8 @@ class UserService {
         return formatSimpleUser(data)
     }
 
+
+
 }
 
 export default UserService

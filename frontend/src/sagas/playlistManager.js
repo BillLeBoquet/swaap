@@ -1,13 +1,13 @@
 import {put, takeEvery} from 'redux-saga/effects'
+import RequestInBean from "../modeles/RequestInBean";
+import DeezerService from "../services/DeezerService";
+import SpotifyService from "../services/SpotifyService";
 import {
     ADD_TO_PLAYLIST,
     IMPORT_PLAYLIST,
     addResultToPlaylist,
     convertPlaylistProgress, GET_SAVED_PLAYLIST
 } from "../modules/playlistManager";
-import RequestInBean from "../modeles/RequestInBean";
-import DeezerService from "../services/DeezerService";
-import SpotifyService from "../services/SpotifyService";
 
 async function getPlaylistTracksFromApi(input, spotifyService, deezerService) {
     switch (input.api) {
@@ -80,19 +80,23 @@ function* importSavedPlaylistFromId(input) {
 }
 
 function* addTrackToPlaylist(input) {
-    //yield put(toggleAddTrack())
-
-    const {track, api} = input
+    const {track, api, trackCorrelation} = input
     const artists = track.artists
     const title = track.name
     const album = track.album.name
 
     const requestInBean = new RequestInBean(title, album, artists)
-    let tracksFromApis
+    let tracksFromApis, tuple
 
     switch(api) {
         case 1:
-            const deezer = yield new DeezerService().searchTrackFromCompleteRequestInBean(requestInBean)
+            tuple = trackCorrelation.filter((tuple) => tuple.dataSpotify === track.id)
+            let deezer
+            if(tuple.length > 0) {
+                deezer = yield new DeezerService().getTrackFromId(tuple[0].dataDeezer)
+            } else {
+                deezer = yield new DeezerService().searchTrackFromCompleteRequestInBean(requestInBean)
+            }
 
             if(deezer === false) {
                 tracksFromApis = {}
@@ -106,7 +110,13 @@ function* addTrackToPlaylist(input) {
 
             break;
         case 2:
-            const spotify = yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
+            tuple = trackCorrelation.filter((tuple) => tuple.dataDeezer === track.id)
+            let spotify
+            if(tuple.length > 0) {
+                spotify = yield new SpotifyService().getTrackFromId(tuple[0].dataDeezer)
+            } else {
+                spotify = yield new SpotifyService().searchTrackFromCompleteRequestInBean(requestInBean)
+            }
 
             if(spotify === false) {
                 tracksFromApis = {}

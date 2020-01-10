@@ -6,7 +6,7 @@ import {resetPlaylist, updatePlaylistName} from "../modules/playlistManager";
 
 const PlaylistManager = () => {
     const {tracks, searchBar, searchValue, api} = useSelector(state => state.search)
-    const {playlists, progressBar, playlistName, playlistImage} = useSelector(state => state.playlists)
+    const {playlists, progressBar, playlistName, playlistImage, trackCorrelation} = useSelector(state => state.playlists)
     const {token} = useSelector(state => state.localize)
     const dispatch = useDispatch()
 
@@ -135,8 +135,8 @@ const PlaylistManager = () => {
                             &nbsp;
                             &nbsp;
                             <div className="row">
-                                <Tracks items={getTrackToDisplay(tracks)} api={api} isPlaylist={false}/>
-                                <Tracks items={getPlaylistToDisplay(playlists)} api={api} isPlaylist={true}/>
+                                <Tracks items={getTrackToDisplay(tracks)} api={api} isPlaylist={false} trackCorrelation={trackCorrelation}/>
+                                <Tracks items={getPlaylistToDisplay(playlists)} api={api} isPlaylist={true} trackCorrelation={trackCorrelation}/>
                             </div>
                             <div className="kt-section">
                                 <div className="kt-section__info">
