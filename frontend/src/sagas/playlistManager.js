@@ -6,8 +6,9 @@ import {
     ADD_TO_PLAYLIST,
     IMPORT_PLAYLIST,
     addResultToPlaylist,
-    convertPlaylistProgress, GET_SAVED_PLAYLIST
+    convertPlaylistProgress, GET_SAVED_PLAYLIST, SAVE_NEW_PLAYLIST
 } from "../modules/playlistManager";
+import PlaylistService from "../services/PlaylistService";
 
 async function getPlaylistTracksFromApi(input, spotifyService, deezerService) {
     switch (input.api) {
@@ -77,6 +78,15 @@ function* importSavedPlaylistFromId(input) {
         image,
     }))
 
+}
+
+function* saveNewPlaylist(input) {
+    const {playlist, userId} = input.input
+
+    const playlistService = new PlaylistService()
+    const {data} = playlistService.createPlaylist(playlist)
+    console.log('data')
+    console.log(data)
 }
 
 function* addTrackToPlaylist(input) {
@@ -234,7 +244,8 @@ function* importPlaylistFromId(input) {
 }
 
 export default function* manageAddPlaylist() {
-    yield takeEvery(ADD_TO_PLAYLIST, addTrackToPlaylist);
-    yield takeEvery(IMPORT_PLAYLIST, importPlaylistFromId);
+    yield takeEvery(ADD_TO_PLAYLIST, addTrackToPlaylist)
+    yield takeEvery(IMPORT_PLAYLIST, importPlaylistFromId)
     yield takeEvery(GET_SAVED_PLAYLIST, importSavedPlaylistFromId)
+    yield takeEvery(SAVE_NEW_PLAYLIST, saveNewPlaylist)
 }

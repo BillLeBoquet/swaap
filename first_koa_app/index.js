@@ -3,12 +3,17 @@ const koa = require('koa')
 const path = require('path')
 const render = require('koa-ejs')
 const koaRouter = require('koa-router')
+const bodyParser = require('koa-bodyparser')
 const request = require('request')
 const fs = require('fs')
 
 const app = new koa()
 const router = new koaRouter()
-
+const playlistRouter = require('./route/playlist.route')
+const deezerAccountRouter = require('./route/deezerAccount.route')
+const songRouter = require('./route/song.route')
+const spotifyAccountRouter = require('./route/spotifyAccount.model')
+const userRouter = require('./route/user.route')
 const db = require('./config/db.config.js');
   
 db.sequelize.sync().then(() => {
@@ -70,6 +75,8 @@ function getNewAccessToken() {
         })
     })
 }
+
+app.use(bodyParser())
 
 app.use(async (ctx, next) => {
     try {
@@ -315,6 +322,12 @@ router.get('get_user_playlist', '/api/user/playlist/:id', async (ctx) => {
 
     ctx.body = res
 })
+
+playlistRouter(router)
+songRouter(router)
+spotifyAccountRouter(router)
+//deezerAccountRouter(router)
+userRouter(router)
 
 app.use(router.routes())
     .use(router.allowedMethods())

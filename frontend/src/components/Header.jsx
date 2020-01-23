@@ -5,7 +5,7 @@ import {toggleSearch} from '../modules/search';
 import {changeLocale} from "../modules/localize";
 
 const Header = () => {
-    const {user, loading} = useSelector(state => state.auth);
+    const {user, loading, avatar} = useSelector(state => state.auth);
     const {token, flag} = useSelector(state => state.localize);
     const dispatch = useDispatch()
 
@@ -19,12 +19,18 @@ const Header = () => {
                 </div>
             </div>
             <div className="kt-header__topbar kt-grid__item kt-grid__item--fluid">
-                <div className="kt-header__topbar-item kt-header__topbar-item--search">
-                    <div className="kt-header__topbar-wrapper" id="kt_offcanvas_toolbar_search_toggler_btn"
-                         onClick={() => dispatch(toggleSearch())}>
-                        <span className="kt-header__topbar-icon"><i className="flaticon2-add-1"/></span>
-                    </div>
-                </div>
+                { user ?
+                    (
+                        <div className="kt-header__topbar-item kt-header__topbar-item--search">
+                            <div className="kt-header__topbar-wrapper" id="kt_offcanvas_toolbar_search_toggler_btn"
+                                 onClick={() => dispatch(toggleSearch())}>
+                                <span className="kt-header__topbar-icon"><i className="flaticon2-add-1"/></span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div/>
+                    )
+                }
                 <div className="kt-header__topbar-item kt-header__topbar-item--langs">
                     <div className="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,0px"
                          aria-expanded="false">
@@ -83,19 +89,11 @@ const Header = () => {
                             </div>
                             <div className="kt-header__topbar-wrapper"
                                 onClick={() => dispatch(detailUser())}>
-                                <img alt="Pic" src={user.avatar}/>
+                                <img alt="Pic" src={avatar}/>
                             </div>
                         </div>
                     ) : (
-                        <div className="kt-header__topbar-item"
-                             onClick={() => dispatch(requestLoginUser())}
-                             id="kt_offcanvas_toolbar_profile_toggler_btn">
-                            <div className="kt-header__topbar-wrapper">
-                                <span className="kt-header__topbar-icon">
-                                    <i className="fa fa-user-alt"/>
-                                </span>
-                            </div>
-                        </div>
+                        <div/>
                     )}
                 </div>
             </div>

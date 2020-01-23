@@ -1,4 +1,5 @@
 import React from 'react';
+
 import './App.css';
 import './components/Header';
 import Header from "./components/Header";
@@ -10,14 +11,15 @@ const App = () => {
     return (
         <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-page"  >
             <div className="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper" id="kt-wrapper">
-                <Header />
-                <Body />
+                <div>
+                    <Header />
+                    <Body />
+                    <UserDetails />
+                </div>
                 <Footer />
-                <UserDetails />
             </div>
         </div>
     )
 };
-
 
 export default App;

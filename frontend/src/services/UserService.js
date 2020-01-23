@@ -8,12 +8,8 @@ class UserService {
             .catch(function (error) {
                 console.error(error)
             })
-
         return formatSimpleUser(data)
     }
-
-
-
 }
 
 export default UserService

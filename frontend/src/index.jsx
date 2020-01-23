@@ -8,8 +8,12 @@ import * as reducers from "./modules/reducers";
 import sagas from "./sagas/sagas";
 import * as serviceWorker from './serviceWorker';
 import App from './App';
-
-//TODO : ROUTING AVEC react-router-5
+import {BrowserRouter, Route, Redirect, Switch} from "react-router-dom";
+import Login from "./components/Login";
+import PrivateRoute from "./components/PrivateRoute";
+import SignUp from "./components/SignUp";
+import NotFoundPage from "./components/NotFoundPage";
+import Header from "./components/Header";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
@@ -27,7 +31,17 @@ sagas.forEach(saga => sagaMiddleware.run(saga))
 
 ReactDOM.render(
     <Provider store={store}>
-        <App/>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path='/' render={() => (
+                    <Redirect to={'/private/home'} />
+                )}/>
+                <Route path='/public/login' component={Login}/>
+                <Route path='/public/signUp' component={SignUp}/>
+                <PrivateRoute path='/private/' component={App}/>
+                <Route path="*" component={NotFoundPage} />
+            </Switch>
+        </BrowserRouter>
     </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
