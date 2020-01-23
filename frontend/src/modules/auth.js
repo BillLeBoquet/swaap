@@ -36,6 +36,7 @@ export default function reducer(
         playlistsDeezer: [],
         playlistsSpotify: [],
         playlistsSaved: [],
+        avatar: "'/dist/assets/media/users/default.jpg'"
     },
     action,
 ) {
@@ -44,6 +45,7 @@ export default function reducer(
             return {
                 ...state,
                 user: action.user,
+                avatar: action.user.avatar,
                 playlistsDeezer: action.playlistsDeezer,
                 playlistsSpotify: action.playlistsSpotify,
                 playlistsSaved: action.playlistsSaved,
@@ -52,6 +54,7 @@ export default function reducer(
             return {
                 ...state,
                 user: null,
+                avatar: "'/dist/assets/media/users/default.jpg'",
                 showUserDetails: false,
                 playlistsDeezer: [],
                 playlistsSpotify: [],

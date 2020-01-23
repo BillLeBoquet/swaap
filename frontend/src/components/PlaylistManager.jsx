@@ -2,11 +2,12 @@ import React from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import Tracks from "./Tracks";
 import {requestSearchTrack, toggleSearch, selectApi, resetSearch} from "../modules/search";
-import {resetPlaylist, updatePlaylistName} from "../modules/playlistManager";
+import {resetPlaylist, saveNewPlaylist, updatePlaylistName} from "../modules/playlistManager";
 
 const PlaylistManager = () => {
     const {tracks, searchBar, searchValue, api} = useSelector(state => state.search)
-    const {playlists, progressBar, playlistName, playlistImage, trackCorrelation} = useSelector(state => state.playlists)
+    const {playlists, progressBar, playlistName, playlistImage, playlistId, trackCorrelation} = useSelector(state => state.playlists)
+    const {user} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize)
     const dispatch = useDispatch()
 
@@ -170,7 +171,16 @@ const PlaylistManager = () => {
                                         onClick={() => dispatch(toggleSearch())}>{token.button_close}</button>
                                 &nbsp;
                                 &nbsp;
-                                <button type="button" className="btn btn-brand">{token.button_save_playlist}</button>
+                                <button type="button" className="btn btn-brand"
+                                    onClick={() => dispatch(saveNewPlaylist({
+                                        playlist: {
+                                            tracks : playlists,
+                                            name : playlistName,
+                                            img : playlistImage,
+                                            id : playlistId,
+                                        },
+                                        userId : user.id,
+                                    }))}>{token.button_save_playlist}</button>
                             </div>
                             <button type="button" className="btn btn-outline-info"
                                     onClick={() => dispatch(resetPlaylist())}>{token.button_reset_playlist}</button>

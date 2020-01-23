@@ -7,6 +7,7 @@ export const IMPORT_PLAYLIST = 'app/playlistManager/IMPORT_PLAYLIST'
 export const CONVERT_PLAYLIST_PROGRESS = 'app/playlistManager/CONVERT_PLAYLIST_PROGRESS'
 export const RESET_PLAYLIST = 'app/playlistManager/RESET_PLAYLIST'
 export const GET_SAVED_PLAYLIST = 'app/playlistManager/GET_SAVED_PLAYLIST'
+export const SAVE_NEW_PLAYLIST = 'app/playlistManager/SAVE_NEW_PLAYLIST'
 
 function removeItemFromPlaylist(playlist, action) {
     const {api, id} = action
@@ -82,6 +83,13 @@ export function resetPlaylist() {
     }
 }
 
+export function saveNewPlaylist(input) {
+    return {
+        type: SAVE_NEW_PLAYLIST,
+        input,
+    }
+}
+
 export default function reducer(
     state = {
         loadingAddTracks: false,
@@ -115,6 +123,7 @@ export default function reducer(
                 ],
                 trackCorrelation : newTrackCorrelation,
                 loadingAddTrack: false,
+                playlistImage: state.playlistImage === '' ? action.apis.spotify.album.image : state.playlistImage
             }
         case REMOVE_TRACK:
             const newPlaylist = removeItemFromPlaylist(state.playlists, action)

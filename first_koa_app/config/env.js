@@ -1,7 +1,7 @@
 const env = {
-    database: 'P3JMopUXfu',
-    username: 'P3JMopUXfu',
-    password: '1EAgUR0g6Z',
+    database: 'yU44Oz9ZN7',
+    username: 'yU44Oz9ZN7',
+    password: '1Pz9STOphq',
     host: 'remotemysql.com',
     dialect: 'mysql',
     pool: {
@@ -11,5 +11,5 @@ const env = {
       idle: 10000
     }
   };
-   
+   //
   module.exports = env;

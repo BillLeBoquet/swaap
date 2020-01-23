@@ -8,8 +8,7 @@ import {resetSearch, toggleSearch} from "../modules/search";
 import {resetPlaylist} from "../modules/playlistManager";
 
 const Body = () => {
-    const {user} = useSelector(state => state.auth);
-    const {playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails} = useSelector(state => state.auth);
+    const {user, playlistsDeezer, playlistsSpotify, playlistsSaved, showUserDetails} = useSelector(state => state.auth);
     const {token} = useSelector(state => state.localize);
     const {searchBar} = useSelector(state => state.search)
     const dispatch = useDispatch()

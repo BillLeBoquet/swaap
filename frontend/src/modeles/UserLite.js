@@ -4,6 +4,7 @@ class UserLite {
         this.pseudo = user.pseudo
         this.role = user.role
         this.avatar = user.avatar
+        this.playlists = user
     }
 }
 
